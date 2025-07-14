@@ -71,30 +71,44 @@ export default function BlogSection({ theme }: BlogSectionProps) {
             image: "/placeholder.svg?height=200&width=300",
             excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
           },
-        ].map((post, index) => (
-          <motion.div
-            key={index}
-            whileHover={{ y: -5 }}
-            className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-all cursor-pointer"
-          >
-            <div className="h-48 bg-gradient-to-br from-gray-700 to-gray-600 overflow-hidden">
-              <Image
-                src={post.image || "/placeholder.svg"}
-                alt={post.title}
-                width={300}
-                height={200}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="p-6 space-y-3">
-              <span className="text-sm" style={{ color: theme.primary }}>
-                {post.date}
-              </span>
-              <h3 className="text-white font-semibold text-lg leading-tight">{post.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{post.excerpt}</p>
-            </div>
-          </motion.div>
-        ))}
+        ].map((post, idx) => {
+          // Animation directions: left, right, top, bottom
+          const directions = [
+            { x: -100, y: 0 }, // left
+            { x: 100, y: 0 },  // right
+            { x: 0, y: -100 }, // top
+            { x: 0, y: 100 },  // bottom
+          ];
+          const dir = directions[idx % 4];
+          return (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, ...dir }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              exit={{ opacity: 0, ...dir }}
+              transition={{ duration: 0.6, delay: 0.05 * idx, type: 'spring', stiffness: 60 }}
+              whileHover={{ y: -5 }}
+              className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-all cursor-pointer"
+            >
+              <div className="h-48 bg-gradient-to-br from-gray-700 to-gray-600 overflow-hidden">
+                <Image
+                  src={post.image || "/placeholder.svg"}
+                  alt={post.title}
+                  width={300}
+                  height={200}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-6 space-y-3">
+                <span className="text-sm" style={{ color: theme.primary }}>
+                  {post.date}
+                </span>
+                <h3 className="text-white font-semibold text-lg leading-tight">{post.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{post.excerpt}</p>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.div>
   )
